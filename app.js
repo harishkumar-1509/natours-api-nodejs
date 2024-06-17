@@ -17,13 +17,11 @@ app.get('/', (req, res) => {
     .json({ message: `Hello from the server side`, app: 'natours' });
 });
 
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   res.status(200).json({ success: true, data: tours });
-});
+};
 
-// In the below URl, suppose we set the url as follows: /api/v1/tours/:id/:x?
-// then that '?' is to set the optional parameter
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
   console.log(req.params);
 
   const id = req.params.id * 1; // in the req.params, each value is in the string format, so we ahve to convert it to int
@@ -34,9 +32,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
   }
 
   res.status(200).json({ success: true, data: tour });
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   console.log(req.params);
 
   const id = req.params.id * 1; // in the req.params, each value is in the string format, so we ahve to convert it to int
@@ -47,9 +45,9 @@ app.delete('/api/v1/tours/:id', (req, res) => {
   }
 
   res.status(204).json({ success: true, data: null });
-});
+};
 
-app.post('/api/v1/tours', (req, res) => {
+const addTour = (req, res) => {
   //   console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
   // Adding a new key-value from a different object to a existing object
@@ -64,7 +62,18 @@ app.post('/api/v1/tours', (req, res) => {
     }
   );
   //   res.send('Done');
-});
+};
+
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', addTour);
+
+// In the below URl, suppose we set the url as follows: /api/v1/tours/:id/:x?
+// then that '?' is to set the optional parameter
+// app.get('/api/v1/tours/:id', getTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app.route('/api/v1/tours').get(getAllTours).post(addTour);
+app.route('/api/v1/tours/:id').get(getTour).delete(deleteTour);
 
 const port = 3000;
 app.listen(port, () => {
