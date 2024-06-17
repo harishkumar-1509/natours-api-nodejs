@@ -27,14 +27,26 @@ app.get('/api/v1/tours/:id', (req, res) => {
   console.log(req.params);
 
   const id = req.params.id * 1; // in the req.params, each value is in the string format, so we ahve to convert it to int
-
+  const tour = tours.find((el) => el.id === id);
   // if (id > tours.length)
   if (!tour) {
     res.status(404).json({ success: false, message: `Invalid id: ${id}` });
   }
 
-  const tour = tours.find((el) => el.id === id);
   res.status(200).json({ success: true, data: tour });
+});
+
+app.delete('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+
+  const id = req.params.id * 1; // in the req.params, each value is in the string format, so we ahve to convert it to int
+  const tour = tours.find((el) => el.id === id);
+  // if (id > tours.length)
+  if (!tour) {
+    res.status(404).json({ success: false, message: `Invalid id: ${id}` });
+  }
+
+  res.status(204).json({ success: true, data: null });
 });
 
 app.post('/api/v1/tours', (req, res) => {
