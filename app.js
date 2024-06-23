@@ -11,7 +11,9 @@ const app = express();
 
 // 3rd party middleware
 // Used for logging
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json());
 

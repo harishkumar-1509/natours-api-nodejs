@@ -8,6 +8,7 @@ yarn-error.log*
 
 # Environment variables
 .env
+config.env
 
 # Runtime data
 pids
