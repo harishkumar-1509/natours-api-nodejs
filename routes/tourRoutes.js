@@ -12,10 +12,8 @@ const router = express.Router();
 
 router.param('id', tourController.checkID);
 
-router
-  .route('/')
-  .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.addTour); //tourController.checBody the middleware that'll be executed for the post method route
+router.route('/').get(tourController.getAllTours).post(tourController.addTour);
+// .post(tourController.checkBody, tourController.addTour); //tourController.checBody the middleware that'll be executed for the post method route
 router
   .route('/:id')
   .get(tourController.getTour)
