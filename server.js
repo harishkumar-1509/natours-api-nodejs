@@ -1,9 +1,27 @@
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+
 dotenv.config({ path: './config.env' });
 
 const app = require('./app');
 
-console.log(process.env); // process.env is to get all the env variables
+const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
+
+mongoose
+  .connect(DB, {
+    ssl: true,
+    authSource: 'admin',
+  })
+  .then((con) => {
+    // console.log(con.connections);
+    console.log('DB connection successful');
+  })
+  .catch((err) => {
+    console.error('DB connection error:', err);
+  });
+
+// process.env is to get all the env variables
+// console.log(process.env);
 
 const port = process.env.PORT || 8000;
 
