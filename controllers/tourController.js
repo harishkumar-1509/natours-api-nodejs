@@ -27,7 +27,46 @@ exports.checkID = (req, res, next, val) => {
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // const tours = await Tour.find({ duration: 5, difficulty: 'easy' });
+
+    // Alternative way for writing the above code using chaining
+    // const query = Tour.find()
+    //   .where('duration')
+    //   .equals(5)
+    //   .where('difficulty')
+    //   .equals('easy');
+
+    // BUILD QUERY
+    // 1A) Filtering
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+
+    excludedFields.forEach((e) => delete queryObj[e]);
+
+    // 1B) Advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    console.log(JSON.parse(queryStr));
+    // { difficulty: 'easy', 'duration': { $gte : 5} }
+
+    // Below is the query in the url that we pass for advanced filtering
+    // { difficulty: 'easy', 'duration': { gte : 5} }
+
+    let query = Tour.find(JSON.parse(queryStr));
+
+    // 2) Sorting
+    if (req.query.sort) {
+      console.log(req.query.sort);
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // SEND RESPONSE
     res.status(200).json({ success: true, data: tours });
   } catch (err) {
     res.status(404).json({ success: false, message: err });
