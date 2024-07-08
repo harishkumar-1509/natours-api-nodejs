@@ -92,10 +92,18 @@ exports.getTour = async (req, res) => {
   //   res.status(404).json({ success: false, message: `Invalid id: ${id}` });
   // }
   try {
+    console.log('--------------');
     const tour = await Tour.findById(req.params.id);
+    console.log('xxxxxxxxxxxxxxxxxxx');
+    if (!tour) {
+      return res
+        .status(404)
+        .json({ success: false, message: `Invalid id: ${req.params.id}` });
+    }
     res.status(200).json({ success: true, data: tour });
   } catch (err) {
-    res.status(404).json({ success: false, message: err });
+    console.log(err);
+    res.status(400).json({ success: false, message: err });
   }
 };
 
