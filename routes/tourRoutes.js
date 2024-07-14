@@ -10,15 +10,23 @@ const router = express.Router();
 //   next();
 // });
 
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 router
-  .route('/')
-  .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.addTour); //tourController.checBody the middleware that'll be executed for the post method route
-router
-  .route('/:id')
-  .get(tourController.getTour)
-  .delete(tourController.deleteTour);
+  .route('/top-5-cheap')
+  .get(tourController.aliasTopTours, tourController.getAllTours);
+
+router.route('/top-stats').get(tourController.getTourStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthyPlan);
+
+router.route('/').get(tourController.getAllTours).post(tourController.addTour);
+// .post(tourController.checkBody, tourController.addTour); //tourController.checBody the middleware that'll be executed for the post method route
+// router
+//   .route('/:id')
+//   .get(tourController.getTour)
+//   .put(tourController.updateTour)
+//   .delete(tourController.deleteTour);
+
+router.route('/:id').get(tourController.getTour);
 
 module.exports = router;
