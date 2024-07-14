@@ -17,6 +17,7 @@ router
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
 router.route('/top-stats').get(tourController.getTourStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthyPlan);
 
 router.route('/').get(tourController.getAllTours).post(tourController.addTour);
 // .post(tourController.checkBody, tourController.addTour); //tourController.checBody the middleware that'll be executed for the post method route
