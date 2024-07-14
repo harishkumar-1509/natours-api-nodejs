@@ -1,19 +1,25 @@
 const fs = require('fs');
 const Tour = require('./../models/tourModel');
 
+exports.aliasTopTours = (req, res) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
 // const tours = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 // );
 
-exports.checkID = (req, res, next, val) => {
-  // if (req.params.id * 1 > tours.length) {
-  //   return res.status(404).json({
-  //     success: false,
-  //     message: 'Invalid Id',
-  //   });
-  // }
-  // next();
-};
+// exports.checkID = (req, res, next, val) => {
+//   // if (req.params.id * 1 > tours.length) {
+//   //   return res.status(404).json({
+//   //     success: false,
+//   //     message: 'Invalid Id',
+//   //   });
+//   // }
+//   // next();
+// };
 
 // exports.checkBody = (req, res, next, val) => {
 //   if (!req.body.name || !req.body.price) {
@@ -71,6 +77,24 @@ exports.getAllTours = async (req, res) => {
       query = query.select('-__v');
     }
 
+    // 4) Pagination
+
+    // page=2&limit=10 ( user wants page number 2 with 10 results )
+    // skip means skip the 10 datas and start from 11th data
+    // query = query.skip(10).limit(10);
+
+    // definning a default page value
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip > numTours) throw new Error('This page does not exist');
+    }
+
     // EXECUTE QUERY
     const tours = await query;
 
@@ -92,9 +116,7 @@ exports.getTour = async (req, res) => {
   //   res.status(404).json({ success: false, message: `Invalid id: ${id}` });
   // }
   try {
-    console.log('--------------');
     const tour = await Tour.findById(req.params.id);
-    console.log('xxxxxxxxxxxxxxxxxxx');
     if (!tour) {
       return res
         .status(404)
