@@ -40,6 +40,7 @@ const tourSchema = new mongoose.Schema(
     images: [String], // Arrays of strings
     createdAt: { type: Date, default: Date.now(), select: false },
     startDates: [Date],
+    secretTour: { type: Boolean, default: false },
   },
   { toJson: { virtuals: true } },
   { toObject: { virtuals: true } }
@@ -71,6 +72,23 @@ tourSchema.pre('save', function (next) {
 tourSchema.post('save', function (doc, next) {
   // Saved document
   console.log(doc);
+  next();
+});
+
+// Query middleware
+// This is called before the find query is executed
+// tourSchema.pre('find', function (next) {
+
+// To execute this middleware for all the query that starts with find ( find, findById etc )
+tourSchema.pre('/^find/', function (next) {
+  this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
+  next();
+});
+
+tourSchema.post('/^find/', function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+  console.log(docs);
   next();
 });
 
