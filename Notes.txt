@@ -27,3 +27,15 @@
 	tourRouter.route('/').get(controller).post(controller)
 
 13) The routes, models and the controllers should be in separate files.
+
+14) Run "npm i ndb --save -dev" -> this is a node debugger package, this command is it to install it locally
+	The above command with --global will install it globally
+
+15) Then in the package.json, under the scripts, add -> "debug": "ndb server.js"
+
+16) Then run "npm run debug" to run the code in debugger mode, then right click on the file in vscode and click on run the script.
+
+17) app.all('*', (req,res,next)=>{}); -> This si to handle all the urls ( used to handle error for invalid url )
+	This middleware should be placed after defining the actual routes because the order of the middleware matters
+
+18) When a middleware is given 4 args ( err, req, res, next ), then it's automatically treated as a error handling middleware
