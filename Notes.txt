@@ -1,0 +1,29 @@
+1) Go the project directory and first run the "npm init" command and then enter the package name, description, version , entry point ( name of the file ), git, keywords, author. This creates the package.json file
+
+2) Then run the command "npm i express" -> to install the express package
+
+3) Create the "app.js" file in the root of the project directory and then do the initial app setup in this file by importing express. ( setting up the port and app.listen)
+
+4) Also add app.use(express.json()) in the app.js file below the app = express() for setting up the midlleware, this is to get access of the req body as a req object.
+
+5) url/:val -> path parameter, access it using the req.params, url/:val? -> optional path parameter
+
+6) Suppose we have same url for the get and post, then we can refactor the route as -> app.route('/url/').get(controllerFunction).post(controllerFunction);
+
+7) All the middlewares defined in the code is together called as a middleware stack. The middlewares are executed in the order that they are defined in the code.
+
+8)app.use((req, res, next)=>{next();});
+
+9) Run the command "npm i morgan"  -> This is a popular library used for logging and it's used as a middleware.
+
+10) app.use(morgan('dev')) -> declare it before the app.use(express.json()) middleware.
+
+11) Create routes using this: ex-> const tourRouter = express.Router();
+    Then, tourRouter.route('/url/').get().post()
+
+12) The router it self is a middleware, so the above url definition can be as follows:
+	app.use('/api/v1/tours', tourRouter)
+	tourRouter = express.Router()
+	tourRouter.route('/').get(controller).post(controller)
+
+13) The routes, models and the controllers should be in separate files.
